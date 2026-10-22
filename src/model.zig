@@ -22,6 +22,7 @@ pub const Config = struct {
     heads:              usize,
     kv_heads:           usize,
     vocab_size:         usize,
+    shared_weight:      bool,
     seq_len:            usize,
 
     pub fn fromHeader(h: binModel) error{InvalidHeader}!Config {
@@ -35,9 +36,10 @@ pub const Config = struct {
             .hidden_dimension   = @intCast(h.hidden_dim),
             .layers             = @intCast(h.n_layers),
             .heads              = @intCast(h.n_heads),
-            .kv_heads           = @intCast(h.n_heads),
+            .kv_heads           = @intCast(h.n_kv_heads),
+            .shared_weight      = if (h.vocab_size > 0) true else false,
             .vocab_size         = @abs(h.vocab_size),
-            .seq_len            = @bitCast(h.seq_len),
+            .seq_len            = @intCast(h.seq_len),
         };
     }
 };
